@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kira Zam Hesaplama 2024 | Yasal Kira Artışı Hesapla</title>
+  <meta name="description" content="Kiranızın yasal sınır dahilinde ne kadar artacağını hesaplayın. TÜFE oranına göre kira zam hesaplama aracı." />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: #fff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 16px 20px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a2332;
+    }
+    header p {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* ADSENSE PLACEHOLDER - ÜST */
+    .ad-banner {
+      display: none;
+    }
+
+    /* ANA KART */
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 0 16px 40px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a2332;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title span {
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* INPUT GRUBU */
+    .input-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-wrap .suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 13px 40px 13px 36px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a2332;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    input[type="number"]:focus {
+      border-color: #3b82f6;
+      background: #fff;
+    }
+
+    /* TÜFE SEÇENEKLER */
+    .tufe-options {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .tufe-btn {
+      padding: 10px 6px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .tufe-btn:hover { border-color: #93c5fd; background: #eff6ff; }
+    .tufe-btn.active { border-color: #3b82f6; background: #dbeafe; color: #1d4ed8; }
+
+    .tufe-note {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    /* HESAPLA BUTONU */
+    .btn-hesapla {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-hesapla:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+    }
+
+    .btn-hesapla:active { transform: translateY(0); }
+
+    /* SONUÇ */
+    .result-card {
+      background: linear-gradient(135deg, #1e3a5f, #1a2f4e);
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .result-card.show { display: block; }
+
+    .result-label {
+      font-size: 12px;
+      color: #93c5fd;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -1px;
+    }
+
+    .result-sub {
+      font-size: 13px;
+      color: #93c5fd;
+    }
+
+    .result-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 16px 0;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .result-row:last-child { margin-bottom: 0; }
+
+    .result-row-label {
+      font-size: 13px;
+      color: #93c5fd;
+    }
+
+    .result-row-value {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .zam-highlight {
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .zam-highlight .zam-text {
+      font-size: 12px;
+      color: #93c5fd;
+      margin-bottom: 4px;
+    }
+
+    .zam-highlight .zam-amount {
+      font-size: 22px;
+      font-weight: 800;
+      color: #60a5fa;
+    }
+
+    /* BİLGİ KUTUSU */
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .info-card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a2332;
+      margin-bottom: 12px;
+    }
+
+    .info-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      width: 24px;
+      height: 24px;
+      background: #dbeafe;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-text {
+      font-size: 13px;
+      color: #475569;
+      line-height: 1.5;
+    }
+
+    .info-text strong { color: #1a2332; }
+
+    /* ADSENSE - ALT */
+    .ad-square {
+      display: none;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 360px) {
+      .result-value { font-size: 28px; }
+      .tufe-options { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🏠 Kira Zam Hesaplama</h1>
+    <p>Yasal kira artışını saniyeler içinde öğren</p>
+  </header>
+
+  <!-- REKLAM ALANI ÜST -->
+  <div class="ad-banner">
+  </div>
+
+  <div class="container">
+
+    <!-- HESAPLAMA KARTI -->
+    <div class="card">
+      <div class="card-title">
+        Kira Bilgilerini Gir
+        <span>Ücretsiz</span>
+      </div>
+
+      <div class="input-group">
+        <label>Mevcut Kira Tutarı</label>
+        <div class="input-wrap">
+          <span class="prefix">₺</span>
+          <input type="number" id="mevcutKira" placeholder="0" min="0" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>TÜFE Oranı (Son 12 Ay Ortalaması)</label>
+        <div class="tufe-options">
+          <button class="tufe-btn" onclick="setTufe(25)">%25</button>
+          <button class="tufe-btn" onclick="setTufe(35)">%35</button>
+          <button class="tufe-btn" onclick="setTufe(45)">%45</button>
+          <button class="tufe-btn" onclick="setTufe(55)">%55</button>
+          <button class="tufe-btn" onclick="setTufe(65)">%65</button>
+          <button class="tufe-btn" onclick="setTufe(75)">%75</button>
+        </div>
+        <div class="input-wrap" style="margin-top:8px">
+          <input type="number" id="tufeOrani" placeholder="Veya oran gir: 47.8" min="0" max="200" step="0.1" inputmode="decimal" style="padding-left: 14px;" />
+          <span class="suffix">%</span>
+        </div>
+        <p class="tufe-note">📊 Güncel TÜFE oranı için TÜİK web sitesini kontrol edin.</p>
+      </div>
+
+      <div class="input-group">
+        <label>Kira Başlangıç Tarihi (Opsiyonel)</label>
+        <input type="month" id="kiraBaslangic" style="width:100%; padding:13px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-size:14px; color:#1a2332; background:#f8fafc; outline:none;" />
+      </div>
+
+      <button class="btn-hesapla" onclick="hesapla()">Hesapla →</button>
+    </div>
+
+    <!-- SONUÇ KARTI -->
+    <div class="result-card" id="sonucKarti">
+      <div class="result-label">Yeni Kira Tutarı</div>
+      <div class="result-value" id="yeniKiraGoster">₺0</div>
+      <div class="result-sub" id="yeniKiraSub"></div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-row">
+        <span class="result-row-label">Mevcut Kira</span>
+        <span class="result-row-value" id="mevcutKiraGoster">₺0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">TÜFE Oranı</span>
+        <span class="result-row-value" id="tufeGoster">%0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Yasal Azami Zam</span>
+        <span class="result-row-value" id="zamOrani">%0</span>
+      </div>
+
+      <div class="zam-highlight">
+        <div class="zam-text">Aylık Artış Tutarı</div>
+        <div class="zam-amount" id="zamTutari">+₺0</div>
+      </div>
+    </div>
+
+    <!-- REKLAM - KARE -->
+    <div class="ad-square">
+    </div>
+
+    <!-- BİLGİ KUTUSU -->
+    <div class="info-card">
+      <h3>📋 Kira Zamı Hakkında</h3>
+
+      <div class="info-item">
+        <div class="info-icon">📌</div>
+        <div class="info-text">
+          <strong>Yasal Sınır:</strong> Kira artışı, bir önceki kira yılının son 12 ayının TÜFE ortalamasını geçemez.
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">📅</div>
+        <div class="info-text">
+          <strong>Ne Zaman Uygulanır?</strong> Kira sözleşmesinin yıl dönümünde, yani imzalanma tarihinden tam 12 ay sonra.
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">⚖️</div>
+        <div class="info-text">
+          <strong>Kiracı Hakları:</strong> Yasal sınırı aşan zam talebi geçersizdir. Anlaşmazlıkta sulh hukuk mahkemesine başvurabilirsiniz.
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="info-icon">📊</div>
+        <div class="info-text">
+          <strong>TÜFE Oranını Nereden Bulursunuz?</strong> TÜİK'in resmi web sitesi (tuik.gov.tr) üzerinden güncel oranı öğrenebilirsiniz.
+        </div>
+      </div>
+    </div>
+
+    <!-- REKLAM - ALT BANNER -->
+    <div class="ad-banner" style="margin: 0 0 16px;">
+    </div>
+
+  </div>
+
+  <footer>
+    Bu araç bilgi amaçlıdır, hukuki tavsiye niteliği taşımaz.<br />
+    Güncel TÜFE oranları için TÜİK'i kontrol edin.<br /><br />
+    © 2024 Kira Hesaplama
+  </footer>
+
+  <script>
+    function setTufe(oran) {
+      document.getElementById('tufeOrani').value = oran;
+      document.querySelectorAll('.tufe-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+
+    document.getElementById('tufeOrani').addEventListener('input', function() {
+      document.querySelectorAll('.tufe-btn').forEach(btn => btn.classList.remove('active'));
+    });
+
+    function formatPara(sayi) {
+      return sayi.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function hesapla() {
+      const mevcutKira = parseFloat(document.getElementById('mevcutKira').value);
+      const tufeOrani = parseFloat(document.getElementById('tufeOrani').value);
+
+      if (!mevcutKira || mevcutKira <= 0) {
+        alert('Lütfen geçerli bir kira tutarı girin.');
+        return;
+      }
+
+      if (!tufeOrani || tufeOrani <= 0) {
+        alert('Lütfen TÜFE oranını girin.');
+        return;
+      }
+
+      // Hesaplama: yasal azami zam = TÜFE oranı
+      const zamOrani = tufeOrani;
+      const zamTutari = mevcutKira * (zamOrani / 100);
+      const yeniKira = mevcutKira + zamTutari;
+
+      // Sonuçları göster
+      document.getElementById('yeniKiraGoster').textContent = '₺' + formatPara(yeniKira);
+      document.getElementById('yeniKiraSub').textContent = 'Aylık maksimum yasal kira tutarı';
+      document.getElementById('mevcutKiraGoster').textContent = '₺' + formatPara(mevcutKira);
+      document.getElementById('tufeGoster').textContent = '%' + tufeOrani;
+      document.getElementById('zamOrani').textContent = '%' + tufeOrani;
+      document.getElementById('zamTutari').textContent = '+₺' + formatPara(zamTutari);
+
+      const sonucKarti = document.getElementById('sonucKarti');
+      sonucKarti.classList.add('show');
+      sonucKarti.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Enter tuşu
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') hesapla();
+    });
+  </script>
+
+</body>
+</html>
