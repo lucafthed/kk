@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kredi ve Taksit Hesaplama 2026 | Aylık Taksit Hesapla</title>
+  <meta name="description" content="Kredi tutarı, faiz oranı ve vadeye göre aylık taksit tutarınızı hesaplayın. Ücretsiz kredi ve taksit hesaplama aracı." />
+  <link rel="canonical" href="https://kirahesap.com/kredi-hesaplama.html" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 16px 20px 0;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a2332;
+    }
+    header p {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
+    .nav-bar {
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 0 4px 12px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-bar::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      flex: 0 0 auto;
+      padding: 9px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: inline-block;
+    }
+
+    .nav-btn.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+    }
+
+    .ad-banner { display: none; }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a2332;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title span {
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .input-group { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-wrap .suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 13px 40px 13px 36px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a2332;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    select { padding-left: 14px; cursor: pointer; }
+
+    input[type="number"]:focus, select:focus {
+      border-color: #3b82f6;
+      background: #fff;
+    }
+
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .opt-btn {
+      padding: 10px 6px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .opt-btn:hover { border-color: #93c5fd; background: #eff6ff; }
+    .opt-btn.active { border-color: #3b82f6; background: #dbeafe; color: #1d4ed8; }
+
+    .tufe-note { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+
+    .btn-hesapla {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-hesapla:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+    }
+
+    .btn-hesapla:active { transform: translateY(0); }
+
+    .result-card {
+      background: linear-gradient(135deg, #1e3a5f, #1a2f4e);
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .result-card.show { display: block; }
+
+    .result-label {
+      font-size: 12px;
+      color: #93c5fd;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -1px;
+    }
+
+    .result-sub { font-size: 13px; color: #93c5fd; }
+
+    .result-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 16px 0;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .result-row:last-child { margin-bottom: 0; }
+    .result-row-label { font-size: 13px; color: #93c5fd; }
+    .result-row-value { font-size: 14px; font-weight: 700; color: #fff; }
+
+    .zam-highlight {
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .zam-highlight .zam-text { font-size: 12px; color: #93c5fd; margin-bottom: 4px; }
+    .zam-highlight .zam-amount { font-size: 22px; font-weight: 800; color: #60a5fa; }
+
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .info-card h3 { font-size: 14px; font-weight: 700; color: #1a2332; margin-bottom: 12px; }
+
+    .info-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+
+    .info-icon {
+      width: 24px;
+      height: 24px;
+      background: #dbeafe;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-text { font-size: 13px; color: #475569; line-height: 1.5; }
+    .info-text strong { color: #1a2332; }
+
+    .taksit-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+    .taksit-table th {
+      background: rgba(255,255,255,0.08);
+      color: #93c5fd;
+      padding: 8px 6px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .taksit-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .taksit-table-wrap { max-height: 220px; overflow-y: auto; margin-top: 12px; }
+
+    .ad-square { display: none; }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .home-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      text-decoration: none;
+      color: #1a2332;
+      text-align: center;
+      transition: transform 0.15s;
+    }
+
+    .home-card:hover { transform: translateY(-2px); }
+
+    .home-card .emoji { font-size: 32px; margin-bottom: 8px; display: block; }
+    .home-card .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .home-card .desc { font-size: 11px; color: #64748b; line-height: 1.4; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 360px) {
+      .result-value { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💳 Kredi / Taksit Hesaplama</h1>
+    <p>Aylık taksit tutarını ve toplam geri ödemeyi öğren</p>
+    <div class="nav-bar">
+      <a href="/kira-zam-hesaplama.html" class="nav-btn ">🏠 Kira Zam</a>
+      <a href="/kdv-hesaplama.html" class="nav-btn ">🧾 KDV</a>
+      <a href="/kredi-hesaplama.html" class="nav-btn active">💳 Kredi/Taksit</a>
+      <a href="/maas-hesaplama.html" class="nav-btn ">💰 Maaş</a>
+    </div>
+  </header>
+
+  <div class="ad-banner"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">
+        Kredi / Taksit Hesapla
+        <span>Ücretsiz</span>
+      </div>
+
+      <div class="input-group">
+        <label>Çekilecek Kredi Tutarı</label>
+        <div class="input-wrap">
+          <span class="prefix">₺</span>
+          <input type="number" id="krediTutar" placeholder="0" min="0" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Aylık Faiz Oranı</label>
+        <div class="input-wrap">
+          <input type="number" id="krediFaiz" placeholder="Örn: 4.5" min="0" max="20" step="0.01" inputmode="decimal" style="padding-left:14px;" />
+          <span class="suffix">%</span>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Vade (Ay)</label>
+        <div class="opt-grid">
+          <button class="opt-btn" onclick="setVade(6, this)">6 Ay</button>
+          <button class="opt-btn" onclick="setVade(12, this)">12 Ay</button>
+          <button class="opt-btn" onclick="setVade(24, this)">24 Ay</button>
+          <button class="opt-btn" onclick="setVade(36, this)">36 Ay</button>
+          <button class="opt-btn" onclick="setVade(48, this)">48 Ay</button>
+          <button class="opt-btn" onclick="setVade(60, this)">60 Ay</button>
+        </div>
+        <div class="input-wrap" style="margin-top:8px">
+          <input type="number" id="krediVade" placeholder="Veya vade gir (ay)" min="1" max="120" inputmode="numeric" style="padding-left:14px;" />
+        </div>
+      </div>
+
+      <button class="btn-hesapla" onclick="hesaplaKredi()">Hesapla →</button>
+    </div>
+
+    <div class="result-card" id="sonucKredi">
+      <div class="result-label">Aylık Taksit Tutarı</div>
+      <div class="result-value" id="krediTaksitGoster">₺0</div>
+      <div class="result-sub">BSMV ve KKDF dahil değildir</div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-row">
+        <span class="result-row-label">Toplam Geri Ödeme</span>
+        <span class="result-row-value" id="krediToplamGoster">₺0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Toplam Faiz Tutarı</span>
+        <span class="result-row-value" id="krediFaizTutarGoster">₺0</span>
+      </div>
+
+      <div class="taksit-table-wrap">
+        <table class="taksit-table">
+          <thead>
+            <tr><th>Ay</th><th>Taksit</th><th>Kalan Anapara</th></tr>
+          </thead>
+          <tbody id="krediTablo"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>📋 Kredi Hesaplama Hakkında</h3>
+      <div class="info-item">
+        <div class="info-icon">📌</div>
+        <div class="info-text"><strong>Eşit Taksit Yöntemi:</strong> Hesaplama, bankaların kullandığı standart anüite (eşit taksit) yöntemine göre yapılır.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">💡</div>
+        <div class="info-text"><strong>Ek Maliyetler:</strong> Gerçek taksit tutarına BSMV (%5) ve KKDF gibi vergiler bankanıza göre eklenebilir.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🏦</div>
+        <div class="info-text"><strong>Faiz Oranı:</strong> Bankanızın size sunduğu güncel aylık faiz oranını kullanın, yıllık değil.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-square"></div>
+
+  <footer>
+    Bu araç bilgi amaçlıdır, mali tavsiye niteliği taşımaz.<br />
+    Güncel faiz oranları için bankanızı kontrol edin.<br /><br />
+    © 2026 Hesaplama Araçları — <a href="/" style="color:#94a3b8;">Tüm Araçlar</a>
+  </footer>
+
+  <script>
+    function formatPara(sayi) {
+      return sayi.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function setVade(ay, btn) {
+      document.getElementById('krediVade').value = ay;
+      document.querySelectorAll('.opt-grid')[0].querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    document.getElementById('krediVade').addEventListener('input', function() {
+      document.querySelectorAll('.opt-grid')[0].querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+    });
+
+    function hesaplaKredi() {
+      const anapara = parseFloat(document.getElementById('krediTutar').value);
+      const aylikFaiz = parseFloat(document.getElementById('krediFaiz').value) / 100;
+      const vade = parseInt(document.getElementById('krediVade').value);
+
+      if (!anapara || anapara <= 0) { alert('Lütfen geçerli bir kredi tutarı girin.'); return; }
+      if (!aylikFaiz || aylikFaiz <= 0) { alert('Lütfen geçerli bir faiz oranı girin.'); return; }
+      if (!vade || vade <= 0) { alert('Lütfen vade süresini girin veya seçin.'); return; }
+
+      const taksit = anapara * (aylikFaiz * Math.pow(1 + aylikFaiz, vade)) / (Math.pow(1 + aylikFaiz, vade) - 1);
+      const toplamGeriOdeme = taksit * vade;
+      const toplamFaiz = toplamGeriOdeme - anapara;
+
+      document.getElementById('krediTaksitGoster').textContent = '₺' + formatPara(taksit);
+      document.getElementById('krediToplamGoster').textContent = '₺' + formatPara(toplamGeriOdeme);
+      document.getElementById('krediFaizTutarGoster').textContent = '₺' + formatPara(toplamFaiz);
+
+      let kalanAnapara = anapara;
+      let tabloHtml = '';
+      const maxSatir = Math.min(vade, 60);
+      for (let ay = 1; ay <= maxSatir; ay++) {
+        const faizPayi = kalanAnapara * aylikFaiz;
+        const anaparaPayi = taksit - faizPayi;
+        kalanAnapara -= anaparaPayi;
+        tabloHtml += '<tr><td>' + ay + '</td><td>₺' + formatPara(taksit) + '</td><td>₺' + formatPara(Math.max(kalanAnapara,0)) + '</td></tr>';
+      }
+      document.getElementById('krediTablo').innerHTML = tabloHtml;
+
+      const sonuc = document.getElementById('sonucKredi');
+      sonuc.classList.add('show');
+      sonuc.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+
+</body>
+</html>

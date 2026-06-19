@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maaş Hesaplama 2026 | Net Brüt Maaş Hesaplama</title>
+  <meta name="description" content="2026 güncel oranlarla net maaşınızı brütten, ya da brüt maaşınızı netten hesaplayın. SGK, gelir vergisi, damga vergisi dahil." />
+  <link rel="canonical" href="https://kirahesap.com/maas-hesaplama.html" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f0f4f8;
+      color: #1a2332;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #fff;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 16px 20px 0;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a2332;
+    }
+    header p {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 4px;
+      margin-bottom: 14px;
+    }
+
+    .nav-bar {
+      display: flex;
+      overflow-x: auto;
+      gap: 6px;
+      padding: 0 4px 12px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-bar::-webkit-scrollbar { display: none; }
+
+    .nav-btn {
+      flex: 0 0 auto;
+      padding: 9px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #e2e8f0;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.15s;
+      display: inline-block;
+    }
+
+    .nav-btn.active {
+      background: #2563eb;
+      border-color: #2563eb;
+      color: #fff;
+    }
+
+    .ad-banner { display: none; }
+
+    .container {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a2332;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-title span {
+      background: #dbeafe;
+      color: #1d4ed8;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .input-group { margin-bottom: 16px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-bottom: 6px;
+    }
+
+    .input-wrap { position: relative; }
+
+    .input-wrap .prefix {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .input-wrap .suffix {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    input[type="number"], select {
+      width: 100%;
+      padding: 13px 40px 13px 36px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a2332;
+      background: #f8fafc;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+    }
+
+    select { padding-left: 14px; cursor: pointer; }
+
+    input[type="number"]:focus, select:focus {
+      border-color: #3b82f6;
+      background: #fff;
+    }
+
+    .opt-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .opt-btn {
+      padding: 10px 6px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 8px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .opt-btn:hover { border-color: #93c5fd; background: #eff6ff; }
+    .opt-btn.active { border-color: #3b82f6; background: #dbeafe; color: #1d4ed8; }
+
+    .tufe-note { font-size: 11px; color: #94a3b8; margin-top: 6px; }
+
+    .btn-hesapla {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .btn-hesapla:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+    }
+
+    .btn-hesapla:active { transform: translateY(0); }
+
+    .result-card {
+      background: linear-gradient(135deg, #1e3a5f, #1a2f4e);
+      border-radius: 16px;
+      padding: 24px;
+      color: #fff;
+      display: none;
+      margin-bottom: 16px;
+    }
+
+    .result-card.show { display: block; }
+
+    .result-label {
+      font-size: 12px;
+      color: #93c5fd;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .result-value {
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 4px;
+      letter-spacing: -1px;
+    }
+
+    .result-sub { font-size: 13px; color: #93c5fd; }
+
+    .result-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.1);
+      margin: 16px 0;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .result-row:last-child { margin-bottom: 0; }
+    .result-row-label { font-size: 13px; color: #93c5fd; }
+    .result-row-value { font-size: 14px; font-weight: 700; color: #fff; }
+
+    .zam-highlight {
+      background: rgba(59,130,246,0.2);
+      border: 1px solid rgba(59,130,246,0.3);
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .zam-highlight .zam-text { font-size: 12px; color: #93c5fd; margin-bottom: 4px; }
+    .zam-highlight .zam-amount { font-size: 22px; font-weight: 800; color: #60a5fa; }
+
+    .info-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .info-card h3 { font-size: 14px; font-weight: 700; color: #1a2332; margin-bottom: 12px; }
+
+    .info-item { display: flex; gap: 10px; margin-bottom: 10px; align-items: flex-start; }
+
+    .info-icon {
+      width: 24px;
+      height: 24px;
+      background: #dbeafe;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-text { font-size: 13px; color: #475569; line-height: 1.5; }
+    .info-text strong { color: #1a2332; }
+
+    .taksit-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+    .taksit-table th {
+      background: rgba(255,255,255,0.08);
+      color: #93c5fd;
+      padding: 8px 6px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .taksit-table td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      color: #fff;
+    }
+    .taksit-table-wrap { max-height: 220px; overflow-y: auto; margin-top: 12px; }
+
+    .ad-square { display: none; }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .home-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      text-decoration: none;
+      color: #1a2332;
+      text-align: center;
+      transition: transform 0.15s;
+    }
+
+    .home-card:hover { transform: translateY(-2px); }
+
+    .home-card .emoji { font-size: 32px; margin-bottom: 8px; display: block; }
+    .home-card .title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .home-card .desc { font-size: 11px; color: #64748b; line-height: 1.4; }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 360px) {
+      .result-value { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>💰 Net / Brüt Maaş Hesaplama</h1>
+    <p>2026 güncel oranlarla maaşınızı hesaplayın</p>
+    <div class="nav-bar">
+      <a href="/kira-zam-hesaplama.html" class="nav-btn ">🏠 Kira Zam</a>
+      <a href="/kdv-hesaplama.html" class="nav-btn ">🧾 KDV</a>
+      <a href="/kredi-hesaplama.html" class="nav-btn ">💳 Kredi/Taksit</a>
+      <a href="/maas-hesaplama.html" class="nav-btn active">💰 Maaş</a>
+    </div>
+  </header>
+
+  <div class="ad-banner"></div>
+
+  <div class="container">
+    <div class="card">
+      <div class="card-title">
+        Net / Brüt Maaş Hesapla
+        <span>2026</span>
+      </div>
+
+      <div class="input-group">
+        <label>Hesaplama Türü</label>
+        <div class="opt-grid" style="grid-template-columns: repeat(2, 1fr);">
+          <button class="opt-btn active" onclick="setMaasYon('brutten', this)">Brütten Nete</button>
+          <button class="opt-btn" onclick="setMaasYon('netten', this)">Netten Brüte</button>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label id="maasTutarLabel">Brüt Maaş</label>
+        <div class="input-wrap">
+          <span class="prefix">₺</span>
+          <input type="number" id="maasTutar" placeholder="0" min="0" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>Engellilik İndirimi</label>
+        <select id="maasEngel">
+          <option value="0">Yok</option>
+          <option value="1">1. Derece</option>
+          <option value="2">2. Derece</option>
+          <option value="3">3. Derece</option>
+        </select>
+      </div>
+
+      <button class="btn-hesapla" onclick="hesaplaMaas()">Hesapla →</button>
+    </div>
+
+    <div class="result-card" id="sonucMaas">
+      <div class="result-label" id="maasSonucLabel">Net Maaş</div>
+      <div class="result-value" id="maasSonucGoster">₺0</div>
+      <div class="result-sub">Elinize geçecek aylık tutar</div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-row">
+        <span class="result-row-label">SGK Primi (%14)</span>
+        <span class="result-row-value" id="maasSgkGoster">₺0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">İşsizlik Sigortası (%1)</span>
+        <span class="result-row-value" id="maasIssizlikGoster">₺0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Gelir Vergisi</span>
+        <span class="result-row-value" id="maasGvGoster">₺0</span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label">Damga Vergisi</span>
+        <span class="result-row-value" id="maasDvGoster">₺0</span>
+      </div>
+
+      <div class="zam-highlight">
+        <div class="zam-text">İşverene Toplam Maliyet</div>
+        <div class="zam-amount" id="maasMaliyetGoster">₺0</div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h3>📋 Maaş Hesaplama Hakkında</h3>
+      <div class="info-item">
+        <div class="info-icon">📌</div>
+        <div class="info-text"><strong>Kesintiler:</strong> Brüt maaştan SGK (%14), işsizlik sigortası (%1) ve gelir/damga vergisi kesilerek net maaş bulunur.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">💡</div>
+        <div class="info-text"><strong>Asgari Ücret İstisnası:</strong> Asgari ücret tutarı gelir ve damga vergisinden istisnadır, bu hesaplamaya dahildir.</div>
+      </div>
+      <div class="info-item">
+        <div class="info-icon">🏢</div>
+        <div class="info-text"><strong>İşveren Maliyeti:</strong> İşveren ayrıca SGK işveren primi öder, bu tutar işverene toplam maliyeti gösterir.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-square"></div>
+
+  <footer>
+    Bu araç bilgi amaçlıdır, mali tavsiye niteliği taşımaz.<br />
+    Güncel oranlar için SGK ve GİB'i kontrol edin.<br /><br />
+    © 2026 Hesaplama Araçları — <a href="/" style="color:#94a3b8;">Tüm Araçlar</a>
+  </footer>
+
+  <script>
+    function formatPara(sayi) {
+      return sayi.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    let maasYon = 'brutten';
+
+    const ASGARI_UCRET_BRUT_2026 = 30000;
+    const GV_DILIMLERI_2026 = [
+      { sinir: 158000, oran: 0.15 },
+      { sinir: 330000, oran: 0.20 },
+      { sinir: 1200000, oran: 0.27 },
+      { sinir: 4300000, oran: 0.35 },
+      { sinir: Infinity, oran: 0.40 }
+    ];
+
+    function setMaasYon(yon, btn) {
+      maasYon = yon;
+      document.querySelectorAll('.opt-grid')[0].querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('maasTutarLabel').textContent = yon === 'brutten' ? 'Brüt Maaş' : 'Net Maaş';
+    }
+
+    function gelirVergisiHesapla(matrah) {
+      let vergi = 0;
+      let oncekiSinir = 0;
+      for (const dilim of GV_DILIMLERI_2026) {
+        if (matrah > oncekiSinir) {
+          const dilimMatrahi = Math.min(matrah, dilim.sinir) - oncekiSinir;
+          vergi += dilimMatrahi * dilim.oran;
+          oncekiSinir = dilim.sinir;
+        } else {
+          break;
+        }
+      }
+      return vergi;
+    }
+
+    function brutenNeteHesapla(brut, engelOrani) {
+      const sgkMatrahi = brut;
+      const sgkPrimi = sgkMatrahi * 0.14;
+      const issizlikPrimi = sgkMatrahi * 0.01;
+
+      const gvMatrahi = Math.max(0, brut - sgkPrimi - issizlikPrimi - engelOrani);
+      const asgariUcretIstisnasiGv = gelirVergisiHesapla(ASGARI_UCRET_BRUT_2026 - ASGARI_UCRET_BRUT_2026 * 0.15);
+      let gelirVergisi = Math.max(0, gelirVergisiHesapla(gvMatrahi) - asgariUcretIstisnasiGv);
+
+      const damgaVergisiOrani = 0.00759;
+      const asgariUcretDv = ASGARI_UCRET_BRUT_2026 * damgaVergisiOrani;
+      let damgaVergisi = Math.max(0, brut * damgaVergisiOrani - asgariUcretDv);
+
+      const net = brut - sgkPrimi - issizlikPrimi - gelirVergisi - damgaVergisi;
+      const islverenMaliyeti = brut * 1.205;
+
+      return { sgkPrimi, issizlikPrimi, gelirVergisi, damgaVergisi, net, islverenMaliyeti };
+    }
+
+    function hesaplaMaas() {
+      const tutar = parseFloat(document.getElementById('maasTutar').value);
+      const engelDerece = parseInt(document.getElementById('maasEngel').value);
+      const engelIndirimleri = { 0: 0, 1: 9900, 2: 5800, 3: 2500 };
+      const engelOrani = engelIndirimleri[engelDerece] || 0;
+
+      if (!tutar || tutar <= 0) { alert('Lütfen geçerli bir maaş tutarı girin.'); return; }
+
+      let brut;
+      if (maasYon === 'brutten') {
+        brut = tutar;
+      } else {
+        brut = tutar * 1.35;
+        for (let i = 0; i < 25; i++) {
+          const sonuc = brutenNeteHesapla(brut, engelOrani);
+          const fark = tutar - sonuc.net;
+          brut += fark;
+        }
+      }
+
+      const sonuc = brutenNeteHesapla(brut, engelOrani);
+
+      document.getElementById('maasSonucLabel').textContent = maasYon === 'brutten' ? 'Net Maaş' : 'Brüt Maaş';
+      document.getElementById('maasSonucGoster').textContent = '₺' + formatPara(maasYon === 'brutten' ? sonuc.net : brut);
+      document.getElementById('maasSgkGoster').textContent = '₺' + formatPara(sonuc.sgkPrimi);
+      document.getElementById('maasIssizlikGoster').textContent = '₺' + formatPara(sonuc.issizlikPrimi);
+      document.getElementById('maasGvGoster').textContent = '₺' + formatPara(sonuc.gelirVergisi);
+      document.getElementById('maasDvGoster').textContent = '₺' + formatPara(sonuc.damgaVergisi);
+      document.getElementById('maasMaliyetGoster').textContent = '₺' + formatPara(sonuc.islverenMaliyeti);
+
+      const sonucKarti = document.getElementById('sonucMaas');
+      sonucKarti.classList.add('show');
+      sonucKarti.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  </script>
+
+</body>
+</html>
